@@ -1,1 +1,455 @@
-Hello World
+<!-- 
+Digital Visualisation Individual Project
+visualising Eco Data in Globe
+3D visualisation experimenting   -->
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <title>Eco Globe - Shu</title>
+  <meta charset="utf-8">
+  <style type="text/css">
+    html {
+      height: 100%;
+    }
+
+ body {
+      margin: 0;
+      padding: 0;
+      background: #000000 url('imgs/loading.gif') center center no-repeat;
+      background-image: url("imgs/background.jpg") ; 
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;;
+
+      color: #ffffff;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      line-height: 20px;
+      height: 100%;
+    }
+
+#container{
+  position: absolute;
+  display:inline-block;
+
+  width:70%;
+  margin-top: 40px;
+
+}
+ #info {
+      background-color: rgba(0,0,0,0.3);
+      font-size: 10px;
+      position: absolute;
+      bottom: 5px;
+      border-radius: 3px;
+      right: 10px;
+      padding: 3px 10px 0 10px;
+    }
+
+  #currentInfo {
+      width: 270px;
+      position: absolute;
+      left: 20px;
+      top: 90px;
+      border-top: 1px solid rgba(255,255,255,0.4);
+      padding: 10px;
+      font-weight: 400;
+    }
+
+
+ #currentInfo2 {
+      width: 360px;
+      position: absolute;
+      right: 20px;
+      top: 93px;
+      border-top: 1px solid rgba(255,255,255,0.4);
+      padding: 10px;
+    }
+
+a {
+      color: #aaa;
+      text-decoration: none;
+    }
+ a:hover {
+      text-decoration: underline;
+    }
+
+.bull {
+      padding: 0 5px;
+      color: #555;
+    }
+
+ #title {
+      position: absolute;
+      top: 20px;
+      min-width: 270px;
+      left: 20px;
+      border-radius: 3px;
+      font-size: 33px ;
+      padding: 10px;
+      padding-bottom: 10px;
+      color:white;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: bold;
+
+    }
+
+ #sub1{
+      color: rgba(255, 255, 255,0.8);
+      margin-top: 15px;
+      margin-left: 30px;
+      font-size: 13px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: 200;
+
+    }
+
+  #sub2{
+      color: rgba(255, 255, 255,0.8);
+      font-size: 12px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: 200;
+
+    }
+
+ .option {
+      display: none;
+      line-height: 20px;
+      height: 17px;
+      color: rgba(255, 255, 255);
+      margin-top: 20px;
+      padding-top:5px;
+      padding-left: 7px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      font-weight:1100;
+    }
+
+.option:hover, .option.active {
+      font-size: 15px;
+    
+    color: black;
+    text-shadow: 1px 1px 2px white, 0 0 25px blue, 0 0 5px white;
+
+    }
+
+ #noWebGL {
+      visibility: hidden;
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      width: 600px;
+      margin-left: -300px;
+      padding: 3px;
+
+      color: #FF8248;
+      text-align: center;
+
+      border: 2px dotted #B32000;
+      border-radius: 5px;
+    }
+
+.hidden>div {
+  display:none;
+}
+
+.visible>div {
+  display:block;
+}
+
+
+h2{
+  font-size:13px;
+  color:purple;
+}
+
+ h2:hover, h2.active {
+    font-size: 14px;
+    
+    color: black;
+    text-shadow: 1px 1px 2px white, 0 0 25px blue, 0 0 5px white;
+
+    }
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 9px;
+}
+
+th, td {
+    padding: 4px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+
+#r1{
+color:#00ffff;
+}
+
+#r2{
+color:#ffff66;
+}
+
+#r3{
+color:#66ff66;
+}
+
+#r4{
+color:#aa80ff;
+}
+
+  </style>
+
+  <script type="text/javascript" src="third-party/Three/ThreeWebGL.js"></script>
+  <script type="text/javascript" src="third-party/Three/ThreeExtras.js"></script>
+  <script type="text/javascript" src="third-party/Three/Detector.js"></script>
+  <script type="text/javascript" src="third-party/Tween.js"></script>
+  <script type="text/javascript" src="globe.js"></script>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      if(!Detector.webgl)
+      {
+        $('#noWebGL').css('visibility', 'visible');
+        $('body').css('background', '#000000');
+      } else{
+        var colors = [0x00ffff, 0xffff66,0x66ff66, 0xaa80ff,0x000000];
+        var globe = DAT.Globe($('#container')[0], function(label)
+        {
+          return new THREE.Color(colors[label]);
+        });
+
+        $('.option').show();
+
+        $('.option').each(function(i)
+        {
+          var htmlcolor = colors[i].toString(16);
+          htmlcolor = '000000'.substr(0, 6 - htmlcolor.length) + htmlcolor;
+          $(this).css('border-left', '20px solid #'+htmlcolor);
+          if (i < 4)
+          {
+            $(this).click(function()
+            {
+              displayData(i+1);
+              $('.option').removeClass('active');
+              $(this).addClass('active');
+            });
+          }
+        });
+
+        $('#sAll').click(function()
+        {
+          displayData(false);
+          $('.option').removeClass('active');
+        })
+
+        function displayData(label)
+        {
+          globe.resetData();
+          globe.addData(window.data, {format: 'legend', showLabel: label});
+          globe.createPoints();
+        }
+
+$(document).ready(function(){
+    $('.text_container').addClass("hidden");
+
+    $('.text_container').click(function() {
+      var $this = $(this);
+
+      if ($this.hasClass("hidden")) {
+        $(this).removeClass("hidden").addClass("visible");
+
+      } else {
+        $(this).removeClass("visible").addClass("hidden");
+      }
+    });
+  });
+
+//read the json data
+        $.ajax({
+          url: 'dataTest.json',
+          dataType: 'json',
+          data: {},
+          cache: false,
+          success: function(data)
+          {
+            window.data = data;
+            displayData(false);
+            globe.animate();
+            $('#sAll').html('Select All ');
+          },
+          error: function(jqXHR, textStatus, errorThrown)
+          {
+            alert('Error downloading data: '+textStatus);
+          }
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+  <div id="container"></div>
+
+  <div id="info">
+    Created by Shu Wei <span class="bull">&bull;</span> Based on <strong><a href="http://www.chromeexperiments.com/globe">WebGL Globe</a></strong> <span class="bull">&bull;</span> Data acquired from &nbsp;<strong><a href="https://data.worldbank.org/">The World Bank </a>
+  </div>
+
+  <div id="currentInfo">
+    <div  class="option" class='text_container'>Population</div>
+    <div class="option">GDP</div>
+    <div  class="option">Green Land</div>
+    <div class="option">CO2 Emission</div>
+    <div id="sAll" class="option">&nbsp;</div>
+  </div>
+
+  <div id="currentInfo2">
+     <div class="text_container">
+      <h2 id='r1'>Population by continent (millions)</h2>
+      <div>
+        <p>    
+<table>
+  <tr>
+    <th>Asia</th>
+    <th>Africa</th>
+    <th>Europe</th>
+     <th>NorthAmerica</th>
+    <th>SouthAmerica</th>
+    <th>Oceania</th>
+    <th>Antarctica</th>
+  </tr>
+  <tr>
+    <td>4,436</td>
+    <td>1,216 </td>
+    <td>738 </td>
+    <td>579 </td>
+    <td>422</td>
+    <td>39  </td>
+    <td>0.001</td>
+  </tr>
+</table>
+        </p>
+      </div>
+    </div>
+
+    <div class="text_container">
+      <h2 id='r2'>GDP (per capita) by continent (billions$)</h2>
+      <div>
+        <p>
+      <table>
+    <tr>
+      <th>NorthAmerica</th>
+      <th>Oceania</th>
+       <th>Europe</th>
+      <th>SouthAmerica</th>
+       <th>Asia</th>
+      <th>Africa</th>
+  </tr>
+  <tr>
+    <td>41,830</td>
+    <td>35,087 </td>
+    <td>21,767 </td>
+    <td>8,520 </td>
+    <td>5,635</td>
+    <td>1,809 </td>
+  </tr>
+</table>
+        </p>
+      </div>
+    </div>
+
+    <div class="text_container">
+      <h2 id='r3'>Green Land by continent (million hectares)</h2>
+      <div>
+        <p>
+           <table>
+    <tr>
+      <th>Europe</th>
+      <th>SouthAmerica</th>
+      <th>NorthAmerica</th>
+      <th>Africa</th>
+      <th>Asia</th>
+      <th>Oceania</th>
+  </tr>
+  <tr>
+    <td>1001</td>
+    <td>832 </td>
+    <td>706 </td>
+    <td>635 </td>
+    <td>572</td>
+    <td>206 </td>
+  </tr>
+</table>
+
+        </p>
+      </div>
+    </div>
+
+    <div class="text_container">
+      <h2 id='r4'>CO2 Emission (per capita) by continent (tonnes)</h2>
+      <div>
+        <p>
+  <table>
+    <tr>
+      <th>NorthAmerica</th>
+      <th>Asia</th>
+      <th>Oceania</th>
+
+      <th>Europe</th>
+      <th>Africa</th>
+            <th>SouthAmerica</th>
+
+  </tr>
+  <tr>
+    <td>17.4</td>
+    <td>16.2 </td>
+    <td>10.3 </td>
+    <td>7.2</td>
+    <td>5.6</td>
+    <td>1.9 </td>
+  </tr>
+</table>
+        </p>
+      </div>
+    </div>
+
+<div class="text_container">
+      <h2>About</h2>
+      <div>
+        <p id='sub2'>
+  For better understanding of data in a 3D sphere space
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="title">
+   Eco Globe 
+   <div id='sub1'>Economic and Ecological Data by Continent</div>
+  </div>
+
+  </div>
+
+
+
+
+  <div id="noWebGL">
+    <h2>Sorry</h2>
+    <p>Your browser either disabled usage of WebGL or it doesn't support WebGL at all.</p>
+    <p>Perhaps a couple of screenshots could be of some comfort:</p>
+    <p>
+      <a href="imgs/screenshot/endo-globe-1.png" target="_blank"><img src="imgs/endo-globe-1.png"</a>
+      <a href="imgs/screenshot/endo-globe-2.png" target="_blank"><img src="imgs/endo-globe-2.png"</a>
+      <a href="imgs/screenshot/endo-globe-3.png" target="_blank"><img src="imgs/endo-globe-3.png"</a>
+      <a href="imgs/screenshot/endo-globe-4.png" target="_blank"><img src="imgs/endo-globe-4.png"</a>
+    </p>
+  </div>
+
+
+</body>
+</html>
