@@ -2,7 +2,6 @@
 Digital Visualisation Individual Project
 visualising Eco Data in Globe
 3D visualisation experimenting   -->
-
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -48,8 +47,19 @@ visualising Eco Data in Globe
       padding: 3px 10px 0 10px;
     }
 
+   #info2 {
+      background-color: rgba(0,0,0,0.3);
+      font-size: 10px;
+      position: absolute;
+      bottom: 5px;
+      border-radius: 3px;
+      left: 10px;
+      padding: 3px 10px 0 10px;
+      display: none;
+    }
+
   #currentInfo {
-      width: 270px;
+      width: 250px;
       position: absolute;
       left: 20px;
       top: 90px;
@@ -101,7 +111,7 @@ a {
  #sub1{
       color: rgba(255, 255, 255,0.8);
       margin-top: 15px;
-      margin-left: 30px;
+      margin-left: 20px;
       font-size: 13px;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-weight: 200;
@@ -110,7 +120,7 @@ a {
 
   #sub2{
       color: rgba(255, 255, 255,0.8);
-      font-size: 12px;
+      font-size: 11px;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-weight: 200;
 
@@ -126,17 +136,20 @@ a {
       padding-left: 7px;
       margin-bottom: 12px;
       cursor: pointer;
-      font-weight:1100;
 /*      font-family: MuseoSans,Arial,sans-serif;
 */      
-font-family: 'Saira Condensed', sans-serif;
+      font-weight: 600;
     }
 
 .option:hover, .option.active {
-      font-size: 15px;
-    
+    font-size: 15px;
     color: black;
-    text-shadow: 1px 1px 2px white, 0 0 25px blue, 0 0 5px white;
+    /*text-shadow: 1px 1px 2px white, 0 0 25px blue, 0 0 5px white;*/
+    color:white;
+    text-decoration:line-through;
+    font-weight: 200;
+    cursor: pointer;
+
 
     }
 
@@ -175,6 +188,7 @@ h2{
     
     color: black;
     text-shadow: 1px 1px 2px white, 0 0 25px blue, 0 0 5px white;
+    cursor: pointer;
 
     }
 
@@ -182,6 +196,7 @@ table {
     border-collapse: collapse;
     width: 100%;
     font-size: 9px;
+    font-weight: 300;
 }
 
 th, td {
@@ -231,6 +246,7 @@ color:#aa80ff;
 
         $('.option').show();
 
+//category selection
         $('.option').each(function(i)
         {
           var htmlcolor = colors[i].toString(16);
@@ -243,6 +259,40 @@ color:#aa80ff;
               displayData(i+1);
               $('.option').removeClass('active');
               $(this).addClass('active');
+              console.log(this.id)
+              
+            if(this.id=='i1'){
+              $('#info2').css("display", "block");
+              $('#png1').css("display", "block");
+              $('#png2').css("display", "none");
+              $('#png3').css("display", "none");
+              $('#png4').css("display", "none");
+             }
+
+              else if(this.id=='i2'){
+              $('#info2').css("display", "block");
+              $('#png2').css("display", "block");
+              $('#png1').css("display", "none");
+              $('#png3').css("display", "none");
+              $('#png4').css("display", "none");
+             }
+              else if(this.id=='i3'){
+              $('#info2').css("display", "block");
+              $('#png3').css("display", "block");
+              $('#png1').css("display", "none");
+              $('#png2').css("display", "none");
+              $('#png4').css("display", "none");
+             }
+              else if(this.id=='i4'){
+              $('#info2').css("display", "block");
+              $('#png3').css("display", "none");
+              $('#png2').css("display", "none");
+              $('#png1').css("display", "none");
+              $('#png4').css("display", "block");
+             } else{
+              $('#info2').css("display", "none");
+             }
+
             });
           }
         });
@@ -260,7 +310,8 @@ color:#aa80ff;
           globe.createPoints();
         }
 
-$(document).ready(function(){
+//info2 session
+   $(document).ready(function(){
     $('.text_container').addClass("hidden");
 
     $('.text_container').click(function() {
@@ -305,12 +356,21 @@ $(document).ready(function(){
     Created by Shu Wei <span class="bull">&bull;</span> Based on <strong><a href="http://www.chromeexperiments.com/globe">WebGL Globe</a></strong> <span class="bull">&bull;</span> Data acquired from &nbsp;<strong><a href="https://data.worldbank.org/">The World Bank </a>
   </div>
 
+
+  <div id="info2">
+    <div>Magnitude Scale: Data displayed by country</div>
+ <div id="png1"><img src="imgs/png1.png"></div> 
+ <div id="png2"><img src="imgs/png2.png"></div> 
+ <div id="png3"><img src="imgs/png3.png"></div> 
+ <div id="png4"><img src="imgs/png4.png"></div> 
+  </div>
+
   <div id="currentInfo">
-    <div  class="option" class='text_container'>Population</div>
-    <div class="option">GDP</div>
-    <div  class="option">Green Land</div>
-    <div class="option">CO2 Emission</div>
-    <div id="sAll" class="option">&nbsp;</div>
+    <div  id='i1' class="option" class='text_container'>Population</div>
+    <div  id='i2' class="option">GDP</div>
+    <div  id='i3' class="option">Green Land</div>
+    <div  id='i4' class="option">CO2 Emission</div>
+    <div  id="sAll" class="option">&nbsp;</div>
   </div>
 
   <div id="currentInfo2">
@@ -407,7 +467,7 @@ $(document).ready(function(){
 
       <th>Europe</th>
       <th>Africa</th>
-            <th>SouthAmerica</th>
+      <th>SouthAmerica</th>
 
   </tr>
   <tr>
@@ -427,7 +487,7 @@ $(document).ready(function(){
       <h2>About</h2>
       <div>
         <p id='sub2'>
-  For better understanding of data in a 3D sphere space
+         A 3D WebGL experiment to explore the global economics and ecology in a globe.
         </p>
       </div>
     </div>
@@ -440,19 +500,10 @@ $(document).ready(function(){
 
   </div>
 
-
-
-
+<!-- if no webGL -->
   <div id="noWebGL">
     <h2>Sorry</h2>
     <p>Your browser either disabled usage of WebGL or it doesn't support WebGL at all.</p>
-    <p>Perhaps a couple of screenshots could be of some comfort:</p>
-    <p>
-      <a href="imgs/screenshot/endo-globe-1.png" target="_blank"><img src="imgs/endo-globe-1.png"</a>
-      <a href="imgs/screenshot/endo-globe-2.png" target="_blank"><img src="imgs/endo-globe-2.png"</a>
-      <a href="imgs/screenshot/endo-globe-3.png" target="_blank"><img src="imgs/endo-globe-3.png"</a>
-      <a href="imgs/screenshot/endo-globe-4.png" target="_blank"><img src="imgs/endo-globe-4.png"</a>
-    </p>
   </div>
 
 
